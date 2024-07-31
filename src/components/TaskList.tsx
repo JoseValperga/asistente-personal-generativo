@@ -1,8 +1,8 @@
 import TaskItem from "./TaskItem";
-import { Task } from "@/utils/interfaces";
+import { DataMeeting} from "@/utils/interfaces";
 
 interface TaskListProps {
-  tasks: Task[];
+  tasks: DataMeeting[];
 }
 
 const TaskList = ({ tasks = [] }: TaskListProps) => {
