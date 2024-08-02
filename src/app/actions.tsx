@@ -32,15 +32,14 @@ export interface ClientMessage {
   role: "user" | "assistant";
   display: ReactNode;
 }
+const LoadingComponent = () => (
+  <div className="animate-pulse p-4">working, please wait...</div>
+);
 
 export async function continueConversation(
   input: string
 ): Promise<ClientMessage> {
   "use server";
-
-  const LoadingComponent = () => (
-    <div className="animate-pulse p-4">getting weather...</div>
-  );
 
   const history = getMutableAIState();
 
@@ -88,7 +87,7 @@ export async function continueConversation(
           }),
         }),
 
-        generate: async ({ dataMeeting }) => {
+        generate: async function* ({ dataMeeting }) {
           history.done((messages: ServerMessage[]) => [
             ...messages,
             {
@@ -96,11 +95,11 @@ export async function continueConversation(
               content: `Showing information`,
             },
           ]);
-
+          
           const availability: OverLap[] = await checkAvailability(dataMeeting);
-
           if (availability.length === 1 && availability[0].result) {
             const temp = availability[0].overLap;
+
             const response = await fetch(
               `${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`,
               {
@@ -110,6 +109,8 @@ export async function continueConversation(
               }
             );
           }
+
+          yield <LoadingComponent />;
 
           return <TaskList tasks={availability[0].overLap} history={history} />;
         },

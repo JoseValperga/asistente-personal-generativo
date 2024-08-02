@@ -16,10 +16,8 @@ const TaskItem = ({ task, history }: TaskItemProps) => {
     },
   ]);*/
   return (
-    <div className="task-item">
-      <div>--------------------</div>
-      <div>{task.message ? `Mensaje: ${task.message}` : ""}</div>
-      <div>{task.what ? `Qué: ${task.what.join(", ")}` : ""}</div>
+    <div className="border border-black rounded-xl m-3 p-2">
+      <div>{task.message ? `${task.message}` : ""}</div>
       <div>{`Participantes: ${task.who.join(", ")}`}</div>
       <div>{`Cuándo: ${task.when}`}</div>
       <div>{`Desde: ${task.since}`}</div>
@@ -32,3 +30,7 @@ const TaskItem = ({ task, history }: TaskItemProps) => {
 
 export default TaskItem;
 
+/*
+<div>{task.message ? `Mensaje: ${task.message}` : ""}</div>
+      <div>{task.what ? `Qué: ${task.what.join(", ")}` : ""}</div>
+      */
