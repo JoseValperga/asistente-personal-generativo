@@ -7,11 +7,31 @@ export interface OverLap {
   result: boolean;
   response: string;
 }
+export const blankData: DataMeeting[] = [
+  {
+    message: " ",
+    what: [],
+    who: [],
+    when: " ",
+    since: " ",
+    until: " ",
+    about: [],
+    duration: " ",
+  },
+];
 
 export const checkAvailability = async (
   dataMeeting: DataMeeting
 ): Promise<OverLap[]> => {
   console.log("Estoy en checkAvailability");
+
+  const array: OverLap[] = [];
+
+  const helperTest: OverLap = {
+    overLap: blankData,
+    response: " ",
+    result: false,
+  };
 
   try {
     await connectDB();
@@ -21,21 +41,30 @@ export const checkAvailability = async (
       dataMeeting
     );
 
-    const array: OverLap[] = [];
-
     if (test1.result && test2.result && test3.result) {
       array.push(test1);
       return array;
     }
 
-    if (!test1.result) {
-      array.push(test1);
+    if (test1.result === false) {
+      test1.overLap.forEach((elemento) => {
+        elemento.message = test1.response;
+        array.push(test1);
+      });
     }
-    if (!test2.result) {
-      array.push(test2);
+
+    if (test2.result === false) {
+      test2.overLap.forEach((elemento) => {
+        elemento.message = test2.response;
+        array.push(test2);
+      });
     }
-    if (!test3.result) {
-      array.push(test3);
+
+    if (test3.result === false) {
+      test1.overLap.forEach((elemento) => {
+        elemento.message = test3.response;
+        array.push(test3);
+      });
     }
     return array;
   } catch (error) {
@@ -70,8 +99,10 @@ export const verifyMeetingAvailability = async (
     });
 
     if (overLappingMeetings.length === 0) {
+      const array: DataMeeting[] = [];
+      array.push(dataMeeting);
       return {
-        overLap: [],
+        overLap: array,
         result: true,
         response:
           "No hay reuniones que terminen después de la hora de comienzo de la nueva reunión.",
@@ -145,7 +176,7 @@ export const verifyUniqueStartTime = async (
         overLap: overLappingDataMeetings,
         result: false,
         response:
-          "Existen reuniones que comienzan a la misma hora de la nueva reunión",
+          "Existen reuniones que comienzan a la misma hora de la nueva reunión:",
       };
     }
   } catch (error) {
@@ -206,7 +237,7 @@ const verifyEndTimeBeforeOtherStartTimes = async (
         overLap: overLappingDataMeetings,
         result: false,
         response:
-          "Existen reuniones que entran en conflicto con la nueva reunión",
+          "Existen reuniones que entran en conflicto con la nueva reunión:",
       };
     }
   } catch (error) {

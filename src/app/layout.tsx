@@ -1,3 +1,4 @@
+import "../app/globals.css"
 import { ReactNode } from 'react';
 import { AI } from './actions';
 

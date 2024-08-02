@@ -1,4 +1,4 @@
-import { openai } from "@ai-sdk/openai";
+/*import { openai } from "@ai-sdk/openai";
 import { createStreamableValue } from "ai/rsc";
 import { CoreMessage, streamText, generateText } from "ai";
 import dotenv from "dotenv";
@@ -36,7 +36,7 @@ export async function continueConversation(messages: CoreMessage[]) {
     console.error("Error en POST", error);
   }
 }
-
+*/
 /*
 import { openai } from "@ai-sdk/openai";
 import { streamObject, generateText, tool } from "ai";

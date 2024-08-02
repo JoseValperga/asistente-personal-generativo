@@ -1,24 +1,34 @@
-import { Task } from "@/utils/interfaces";
+import { ServerMessage } from "@/app/actions";
+import { DataMeeting, Task } from "@/utils/interfaces";
+import { getMutableAIState } from "ai/rsc";
 
 interface TaskItemProps {
-  task: Task;
+  task: DataMeeting;
+  history: ReturnType<typeof getMutableAIState>;
 }
 
-const TaskItem = ({ task }: TaskItemProps) => {
-  console.log("Task", task);
+const TaskItem = ({ task, history }: TaskItemProps) => {
+  /*history.done((messages: ServerMessage[]) => [
+    ...messages,
+    {
+      role: "assistant",
+      content: `Showing information`,
+    },
+  ]);*/
   return (
     <div className="task-item">
       <div>--------------------</div>
-      <div>{task.message}</div>
-      <div>{task.what.join(", ")}</div>
-      <div>{task.who.join(", ")}</div>
-      <div>{task.when}</div>
-      <div>{task.since}</div>
-      <div>{task.until}</div>
-      <div>{task.about.join(", ")}</div>
-      <div>{task.duration}</div>
+      <div>{task.message ? `Mensaje: ${task.message}` : ""}</div>
+      <div>{task.what ? `Qué: ${task.what.join(", ")}` : ""}</div>
+      <div>{`Participantes: ${task.who.join(", ")}`}</div>
+      <div>{`Cuándo: ${task.when}`}</div>
+      <div>{`Desde: ${task.since}`}</div>
+      <div>{`Hasta: ${task.until}`}</div>
+      <div>{`Acerca de: ${task.about.join(", ")}`}</div>
+      <div>{`Duración: ${task.duration}`}</div>
     </div>
   );
 };
 
 export default TaskItem;
+

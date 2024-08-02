@@ -2,7 +2,7 @@
 
 import { createAI, getMutableAIState, streamUI } from "ai/rsc";
 import { openai } from "@ai-sdk/openai";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import { z } from "zod";
 import { generateId } from "ai";
 import {
@@ -37,6 +37,10 @@ export async function continueConversation(
   input: string
 ): Promise<ClientMessage> {
   "use server";
+
+  const LoadingComponent = () => (
+    <div className="animate-pulse p-4">getting weather...</div>
+  );
 
   const history = getMutableAIState();
 
@@ -85,7 +89,6 @@ export async function continueConversation(
         }),
 
         generate: async ({ dataMeeting }) => {
-          console.log("Estoy en generate", dataMeeting);
           history.done((messages: ServerMessage[]) => [
             ...messages,
             {
@@ -96,18 +99,19 @@ export async function continueConversation(
 
           const availability: OverLap[] = await checkAvailability(dataMeeting);
 
-          if (availability.length === 1) {
+          if (availability.length === 1 && availability[0].result) {
+            const temp = availability[0].overLap;
             const response = await fetch(
               `${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`,
               {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(availability[0].overLap),
+                body: JSON.stringify(temp),
               }
             );
           }
 
-          return <TaskList tasks={availability[0].overLap}  />;
+          return <TaskList tasks={availability[0].overLap} history={history} />;
         },
       },
     },
