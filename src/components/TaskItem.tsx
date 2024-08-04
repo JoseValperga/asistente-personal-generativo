@@ -4,17 +4,9 @@ import { getMutableAIState } from "ai/rsc";
 
 interface TaskItemProps {
   task: DataMeeting;
-  history: ReturnType<typeof getMutableAIState>;
 }
 
-const TaskItem = ({ task, history }: TaskItemProps) => {
-  /*history.done((messages: ServerMessage[]) => [
-    ...messages,
-    {
-      role: "assistant",
-      content: `Showing information`,
-    },
-  ]);*/
+const TaskItem = ({ task }: TaskItemProps) => {
   return (
     <div className="border border-black rounded-xl m-3 p-2">
       <div>{task.message ? `${task.message}` : ""}</div>

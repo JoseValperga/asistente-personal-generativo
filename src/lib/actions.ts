@@ -18,7 +18,7 @@ export const saveMeeting = async (data: DataMeeting[]) => {
 */
   try {
     await connectDB();
-    console.log("Conectado a la base de datos en saveMeeting");
+    //console.log("Conectado a la base de datos en saveMeeting");
     const newMeet = await Meeting.create({
       who,
       when,

@@ -4,12 +4,12 @@ import { DataMeeting } from "@/utils/interfaces";
 export async function POST(request: Request): Promise<Response> {
   "use server";
   const data: DataMeeting[] = await request.json();
-  console.log("En tasks/route---------------------->", data);
+  //console.log("En tasks/route---------------------->", data);
 
   try {
     const newData = await saveMeeting(data);
     
-    console.log("newData------------------------------------------------->",newData)
+    //console.log("newData------------------------------------------------->",newData)
 
     const response = new Response(JSON.stringify(newData), {
       status: 200,

@@ -5,6 +5,7 @@ import { openai } from "@ai-sdk/openai";
 import { ReactNode, useEffect } from "react";
 import { z } from "zod";
 import { generateId } from "ai";
+import { nanoid } from "@/utils/utils";
 import {
   messageSchema,
   whatSchema,
@@ -43,6 +44,17 @@ export async function continueConversation(
 
   const history = getMutableAIState();
 
+  history.update({
+    ...history.get(),
+    messages: [
+      ...history.get().messages,
+      {
+        id: nanoid(),
+        role: 'user',
+        input
+      }
+    ]
+  })
   const result = await streamUI({
     model: openai("gpt-4o"),
 
@@ -50,13 +62,14 @@ export async function continueConversation(
 
     system: `You're a productivity assistant and manage a daily meeting schedule.
       You should keep in mind that you manage dates, times and duration of meetings.
-      - You cannot schedule meetings on dates and times before the system time. 
+      - You cannot schedule meetings on dates and times before the system time.  
       - If the date is not specified, take by default system time. 
       - You can schedule meetings, delete meetings, move meetings, modify meeting attendees, 
       modify the duration of meetings, modify the topics to be discussed during meetings.
       - Before scheduling a meeting, check if the time slot is available.
       - If the time slot is not available, respond with a message indicating the conflict but do not suggest an alternative time.
-      - Use \`addMeeting\` to save meetings and not for other tasks and it will report you when end
+      - Use \`addMeeting\` to save meetings.You can only schedule one at a time.
+      - If the user asks to schedule several meetings at once, or complete another impossible task, respond that you can't do it right now, but that you are working on implementing it.
       - Always return a response`,
 
     text: ({ content, done }) => {
@@ -71,8 +84,7 @@ export async function continueConversation(
 
     tools: {
       addMeetingTool: {
-        description:
-          "Use to schedule a meeting. Returns true if it could, otherwise returns false",
+        description: "Schedule a meeting.",
 
         parameters: z.object({
           dataMeeting: z.object({
@@ -88,14 +100,15 @@ export async function continueConversation(
         }),
 
         generate: async function* ({ dataMeeting }) {
-          history.done((messages: ServerMessage[]) => [
+          console.log("HISTORY------------------>", history.get());
+          history.update((messages: ServerMessage[]) => [
             ...messages,
             {
               role: "assistant",
-              content: `Showing information`,
+              content: `Schedul information`,
             },
           ]);
-          
+
           const availability: OverLap[] = await checkAvailability(dataMeeting);
           if (availability.length === 1 && availability[0].result) {
             const temp = availability[0].overLap;
@@ -109,10 +122,17 @@ export async function continueConversation(
               }
             );
           }
+          history.done((messages: ServerMessage[]) => [
+            ...messages,
+            {
+              role: "assistant",
+              content: `Schedul information`,
+            },
+          ]);
 
           yield <LoadingComponent />;
 
-          return <TaskList tasks={availability[0].overLap} history={history} />;
+          return <TaskList tasks={availability[0].overLap} />;
         },
       },
     },
