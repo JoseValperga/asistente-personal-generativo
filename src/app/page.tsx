@@ -29,15 +29,15 @@ export default function Home() {
 
     setConversation((currentConversation: ClientMessage[]) => [
       ...currentConversation,
-      message,
+      ...message,
     ]);
 
     setInput("");
-    console.log("CONVERSATION-------------->", conversation)
+    console.log("CONVERSATION-------------->", conversation);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       event.preventDefault();
       handleSendMessage();
     }
@@ -45,7 +45,9 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen w-full p-3">
-      <div className="text-center font-serif border border-black p-4 m-3 rounded-xl">ASISTENTE PERSONAL</div>
+      <div className="text-center font-serif border border-black p-4 m-3 rounded-xl">
+        ASISTENTE PERSONAL
+      </div>
       <div className="grid grid-cols-12 gap-4 flex-grow p-4 font-serif h-full">
         <div className="col-span-3">
           {/*<p className="text-center font-medium mt-4">Resultados</p>*/}
@@ -53,7 +55,31 @@ export default function Home() {
 
         <div className="col-span-6 flex flex-col h-full">
           <div className="flex-grow overflow-y-auto bg-gray-200 p-4 rounded-lg mb-4 border border-black h-0">
-            {conversation.map((message: ClientMessage) => (
+            {conversation.map(
+              (
+                message: any // Aquí debemos asegurarnos de que message sea un objeto, no un array.
+              ) => (
+                <div
+                  key={message.id}
+                  className={`mb-4 p-2 rounded-xl shadow ${
+                    message.role === "user" ? "bg-yellow-200" : "bg-orange-200"
+                  } flex ${
+                    message.role === "user" ? "justify-start" : "justify-end"
+                  }`}
+                >
+                  <span className="font-semibold">
+                    {message.role}
+                    {": "}
+                  </span>
+                  {message.display}
+                </div>
+              )
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+          {/*}
+          <div className="flex-grow overflow-y-auto bg-gray-200 p-4 rounded-lg mb-4 border border-black h-0">
+            {conversation.map((message: ClientMessage[]) => (
               <div
                 key={message.id}
                 className={`mb-4 p-2 rounded-xl shadow ${
@@ -67,7 +93,7 @@ export default function Home() {
             ))}
             <div ref={messagesEndRef} />
           </div>
-
+*/}
           <div className="bg-white p-4 rounded-lg shadow-md grid grid-cols-5 gap-3 border border-black">
             <input
               type="text"
