@@ -1,17 +1,15 @@
 import { z } from "zod";
 const today = new Date();
 
-export const messageSchema = z
-  .string()
-  .describe("Do not use it.");
+export const messageSchema = z.string().describe("Do not use it.");
 
 export const whatSchema = z
-  .array(z.string())
+  .string()
   .describe(
     "What you're going to do. It should be Schedule Meeting, Delete Meeting, Move Meeting, Add Attendees, Remove Attendees, Add Topics, Delete Topics, or any combination between them."
   );
 
-export const whoSchema = z.array(z.string()).describe("Meeting participants");
+export const whoSchema = z.string().describe("Meeting participants");
 
 export const timeSchemaSince = z
   .string()
@@ -27,12 +25,20 @@ export const timeSchemaSinceUntil = z
   })
   .describe(`Meeting end time. Response in the format HH:mm`);
 
-export const whenSchema = z
+export const whenSchemaAdd = z
   .string()
   .describe(`Today is ${today}. Meeting date. Must be YYYY-MM-DD.`);
 
-export const aboutSchema = z
-  .array(z.string())
+  export const whenSchemaListStart = z
+  .string()
+  .describe(`Meeting date. Must be YYYY-MM-DD.`);
+
+  export const whenSchemaListEnd = z
+  .string()
+  .describe(`Meeting date. Must be YYYY-MM-DD.`);
+
+  export const aboutSchema = z
+  .string()
   .describe("Topics to be discussed during the meeting.");
 
 export const durationSchema = z

@@ -35,7 +35,7 @@ const MeetingModel = (sequelize: Sequelize) => {
         defaultValue: DataTypes.UUIDV4,
       },
       who: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.STRING,
         allowNull: false,
       },
       when: {
@@ -55,7 +55,7 @@ const MeetingModel = (sequelize: Sequelize) => {
         allowNull: false,
       },
       about: {
-        type: DataTypes.ARRAY(DataTypes.STRING),
+        type: DataTypes.STRING,
         allowNull: false,
       },
     },

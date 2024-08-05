@@ -10,12 +10,11 @@ export interface OverLap {
 export const blankData: DataMeeting[] = [
   {
     message: " ",
-    what: [],
-    who: [],
+    who: " ",
     when: " ",
     since: " ",
     until: " ",
-    about: [],
+    about: " ",
     duration: " ",
   },
 ];
@@ -23,7 +22,7 @@ export const blankData: DataMeeting[] = [
 export const checkAvailability = async (
   dataMeeting: DataMeeting
 ): Promise<OverLap[]> => {
-  console.log("Estoy en checkAvailability");
+  //console.log("Estoy en checkAvailability");
 
   const array: OverLap[] = [];
 
@@ -112,7 +111,6 @@ export const verifyMeetingAvailability = async (
         const meetingData = meeting.get() as DataMeeting;
         return {
           message: meetingData.message,
-          what: meetingData.what,
           who: meetingData.who,
           when: meetingData.when,
           since: meetingData.since,
@@ -130,7 +128,7 @@ export const verifyMeetingAvailability = async (
       };
     }
   } catch (error) {
-    console.log("Error verifying meeting availability:", error);
+    //console.log("Error verifying meeting availability:", error);
     throw new Error("Error verifying meeting availability:");
   }
 };
@@ -162,7 +160,6 @@ export const verifyUniqueStartTime = async (
         const meetingData = meeting.get() as DataMeeting;
         return {
           message: meetingData.message,
-          what: meetingData.what,
           who: meetingData.who,
           when: meetingData.when,
           since: meetingData.since,
@@ -180,7 +177,7 @@ export const verifyUniqueStartTime = async (
       };
     }
   } catch (error) {
-    console.log("Error verifying meeting availability:", error);
+    //console.log("Error verifying meeting availability:", error);
     throw new Error("Error verifying meeting availability:");
   }
 };
@@ -223,7 +220,6 @@ const verifyEndTimeBeforeOtherStartTimes = async (
         const meetingData = meeting.get() as DataMeeting;
         return {
           message: meetingData.message,
-          what: meetingData.what,
           who: meetingData.who,
           when: meetingData.when,
           since: meetingData.since,
@@ -241,7 +237,7 @@ const verifyEndTimeBeforeOtherStartTimes = async (
       };
     }
   } catch (error) {
-    console.log("Error verifying meeting availability:", error);
+    //("Error verifying meeting availability:", error);
     throw new Error("Error verifying meeting availability:");
   }
 };

@@ -10,14 +10,14 @@ export interface Task {
 }
 
 export interface DataMeeting {
-  message: string;
-  what: string[];
-  who: string[];
+  message?: string;
+  who: string;
   when: string;
+  whenEnd?: string;
   since: string;
   until: string;
-  about: string[];
-  duration: string;
+  about: string;
+  duration?: string;
 }
 
 export interface EnvVariables {

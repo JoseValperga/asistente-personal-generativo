@@ -13,18 +13,21 @@ import { generateId, CoreMessage } from "ai";
 import { nanoid } from "@/utils/utils";
 import {
   messageSchema,
-  whatSchema,
-  whenSchema,
+  whenSchemaListStart,
+  whenSchemaListEnd,
   whoSchema,
   timeSchemaSince,
   timeSchemaSinceUntil,
   aboutSchema,
   durationSchema,
+  whenSchemaAdd,
 } from "../utils/tools/toolSchemas/toolSchemas";
 
 import dotenv from "dotenv";
 import { checkAvailability, OverLap } from "@/utils/tools/checkAvailability";
 import TaskList from "@/components/TaskList";
+import { DataMeeting } from "../utils/interfaces";
+import { listMeetings } from "@/utils/tools/listMeetings";
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
 export type Message = CoreMessage & {
@@ -75,7 +78,7 @@ export async function continueConversation(
       },
     ],
   });
-  
+
   const result = await streamUI({
     model: openai("gpt-4o"),
 
@@ -86,18 +89,20 @@ export async function continueConversation(
         name: message.name,
       })),
     ],
-    
+
+//- Before scheduling a meeting, check if the time slot is available.
+//  - If the time slot is not available, respond with a message indicating the conflict but do not suggest an alternative time.
+
     system: `You're a productivity assistant and manage a daily meeting schedule.
     You should keep in mind that you manage dates, times and duration of meetings.
     - You cannot schedule meetings on dates and times before the system time.  
     - If the date is not specified, take by default system time. 
     - You can schedule meetings, delete meetings, move meetings, modify meeting attendees, 
     modify the duration of meetings, modify the topics to be discussed during meetings.
-    - Before scheduling a meeting, check if the time slot is available.
-    - If the time slot is not available, respond with a message indicating the conflict but do not suggest an alternative time.
-    - Use \`addMeeting\` to save meetings.You can only schedule one at a time.
-    - If the user asks to schedule several meetings at once, or complete another impossible task, respond that you can't do it right now, but that you are working on implementing it.
+    - Use \`addMeetingTool\` to save meetings. If the user asks to schedule several meetings at once, or complete another impossible task, respond that you can't do it right now, but that you are working on implementing it.
+    - Use \`listMeetingsTool\` to list meetings. 
     `,
+  
     text: ({ content, done, delta }) => {
       textStream.update(content);
       if (done) {
@@ -117,14 +122,13 @@ export async function continueConversation(
 
     tools: {
       addMeetingTool: {
-        description: "Schedule a meeting.",
+        description: "Schedule meetings.",
 
         parameters: z.object({
           dataMeeting: z.object({
             message: messageSchema,
-            what: whatSchema,
             who: whoSchema,
-            when: whenSchema,
+            when: whenSchemaAdd,
             since: timeSchemaSince,
             until: timeSchemaSinceUntil,
             about: aboutSchema,
@@ -147,10 +151,62 @@ export async function continueConversation(
                 body: JSON.stringify(temp),
               }
             );
+
+            //yield <LoadingComponent />;
+
+            history.done({
+              ...history.get(),
+              content: [
+                ...history.get().content,
+                {
+                  id: nanoid(),
+                  role: "assistant",
+                  content: [
+                    {
+                      type: "tool-call",
+                      toolName: "addMeetingTool",
+                      toolCallId,
+                      args: { dataMeeting },
+                    },
+                  ],
+                },
+                {
+                  id: nanoid(),
+                  role: "tool",
+                  content: [
+                    {
+                      type: "tool-result",
+                      toolName: "addMeetingTool",
+                      toolCallId,
+                      result: response.ok,
+                    },
+                  ],
+                },
+              ],
+            });
           }
+          return <TaskList tasks={availability[0].overLap} />;
+        },
+      },
 
-          yield <LoadingComponent />;
+      listMeetingsTool: {
+        description: "List meetings",
 
+        parameters: z.object({
+          listMeeting: z.object({
+            who: whoSchema,
+            when: whenSchemaListStart,
+            whenEnd: whenSchemaListEnd,
+            since: timeSchemaSince,
+            until: timeSchemaSinceUntil,
+            about: aboutSchema,
+          }),
+        }),
+
+        generate: async function ({ listMeeting }) {
+          const toolCallId = nanoid();
+          const meetings = await listMeetings(listMeeting)
+          const meetingData = meetings.map(meeting => meeting.dataValues);
           history.done({
             ...history.get(),
             content: [
@@ -161,9 +217,9 @@ export async function continueConversation(
                 content: [
                   {
                     type: "tool-call",
-                    toolName: "addMeetingTool",
+                    toolName: "listMeetingsTool",
                     toolCallId,
-                    args: { dataMeeting },
+                    args: { listMeeting },
                   },
                 ],
               },
@@ -173,15 +229,17 @@ export async function continueConversation(
                 content: [
                   {
                     type: "tool-result",
-                    toolName: "listStocks",
+                    toolName: "listMeetingsTool",
                     toolCallId,
-                    result: availability,
+                    result: meetingData,
                   },
                 ],
               },
             ],
           });
-          return <TaskList tasks={availability[0].overLap} />;
+
+          return <TaskList tasks={meetingData} />;
+          return <div></div>;
         },
       },
     },

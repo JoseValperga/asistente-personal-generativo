@@ -10,19 +10,16 @@ const TaskItem = ({ task }: TaskItemProps) => {
   return (
     <div className="border border-black rounded-xl m-3 p-2">
       <div>{task.message ? `${task.message}` : ""}</div>
-      <div>{`Participantes: ${task.who.join(", ")}`}</div>
-      <div>{`Cuándo: ${task.when}`}</div>
-      <div>{`Desde: ${task.since}`}</div>
-      <div>{`Hasta: ${task.until}`}</div>
-      <div>{`Acerca de: ${task.about.join(", ")}`}</div>
-      <div>{`Duración: ${task.duration}`}</div>
+      <div>{task.who ? `Con quien: ${task.who}` : ""}</div>
+      <div>{task.when ? `Cuándo: ${task.when}` : ""}</div>
+      <div>{task.since ? `Desde: ${task.since}` : ""}</div>
+      <div>{task.until ? `Hasta: ${task.until}` : ""}</div>
+      <div>{task.about ? `Acerca de: ${task.about}` : ""}</div>
+      <div>{task.duration ? `Duración: ${task.duration}` : ""}</div>
     </div>
   );
 };
 
 export default TaskItem;
 
-/*
-<div>{task.message ? `Mensaje: ${task.message}` : ""}</div>
-      <div>{task.what ? `Qué: ${task.what.join(", ")}` : ""}</div>
-      */
+

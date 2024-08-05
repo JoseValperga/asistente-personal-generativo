@@ -1,23 +1,20 @@
 import { saveMeeting } from "@/lib/actions";
+import { connectDB } from "@/lib/db";
 import { DataMeeting } from "@/utils/interfaces";
 
 export async function POST(request: Request): Promise<Response> {
   "use server";
+  await connectDB();
   const data: DataMeeting[] = await request.json();
-  //console.log("En tasks/route---------------------->", data);
 
   try {
     const newData = await saveMeeting(data);
-    
-    //console.log("newData------------------------------------------------->",newData)
-
     const response = new Response(JSON.stringify(newData), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
       },
     });
-
     return response;
   } catch (error) {
     return new Response("Error al guardar la reunión", {
