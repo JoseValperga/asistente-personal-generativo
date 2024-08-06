@@ -10,7 +10,7 @@ import { openai } from "@ai-sdk/openai";
 import { ReactNode, useEffect } from "react";
 import { any, z } from "zod";
 import { generateId, CoreMessage } from "ai";
-import { nanoid } from "@/utils/utils";
+import { nanoid, sleep } from "@/utils/utils";
 import {
   messageSchema,
   whenSchemaListStart,
@@ -140,17 +140,17 @@ export async function continueConversation(
         generate: async function* ({ dataMeeting }) {
           yield <LoadingComponent />;
           let onFinish: boolean = false;
-          const availability: OverLap[] = await checkAvailability(dataMeeting);
           const toolCallId = nanoid();
+          const availability: OverLap[] = await checkAvailability(dataMeeting);
 
           let array: any[] = [];
 
           for (let i = 0; i < availability.length; i++) {
             let temp = availability[i].overLap[0];
-            
+
             array.push(temp);
           }
-
+          sleep(500);
           onFinish = true;
           history.done({
             ...history.get(),
@@ -208,7 +208,7 @@ export async function continueConversation(
           const meetings = await listMeetings(listMeeting);
           const meetingData = meetings.map((meeting) => meeting.dataValues);
           onFinish = true;
-
+          sleep(500);
           history.done({
             ...history.get(),
             content: [

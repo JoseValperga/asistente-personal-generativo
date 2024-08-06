@@ -7,8 +7,14 @@ import { EnvVariables } from "@/utils/interfaces";
 dotenv.config();
 
 const getEnvVariables = (): EnvVariables => {
-  const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL, BASE_URL } =
-    process.env;
+  const {
+    DB_USER,
+    DB_PASSWORD,
+    DB_HOST,
+    DB_NAME,
+    NEXT_PUBLIC_BASE_URL,
+    BASE_URL,
+  } = process.env;
 
   if (
     !DB_USER ||
@@ -27,7 +33,7 @@ const getEnvVariables = (): EnvVariables => {
     DB_HOST,
     DB_NAME,
     NEXT_PUBLIC_BASE_URL,
-    BASE_URL
+    BASE_URL,
   };
 };
 
@@ -52,6 +58,12 @@ const sequelize = new Sequelize(temp, {
       require: true,
       rejectUnauthorized: false,
     },
+  },
+  pool: {
+    acquire: 3000, // Tiempo máximo en milisegundos que Sequelize intentará conectar antes de lanzar un error (30 segundos)
+  },
+  retry: {
+    max: 5, // Número máximo de reintentos en caso de error
   },
 });
 
