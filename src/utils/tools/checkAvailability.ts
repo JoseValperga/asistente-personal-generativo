@@ -42,6 +42,15 @@ export const checkAvailability = async (
 
     if (test1.result && test2.result && test3.result) {
       array.push(test1);
+      const temp = array[0].overLap;
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(temp),
+        }
+      );
       return array;
     }
 

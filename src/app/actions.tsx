@@ -90,8 +90,8 @@ export async function continueConversation(
       })),
     ],
 
-//- Before scheduling a meeting, check if the time slot is available.
-//  - If the time slot is not available, respond with a message indicating the conflict but do not suggest an alternative time.
+    //- Before scheduling a meeting, check if the time slot is available.
+    //  - If the time slot is not available, respond with a message indicating the conflict but do not suggest an alternative time.
 
     system: `You're a productivity assistant and manage a daily meeting schedule.
     You should keep in mind that you manage dates, times and duration of meetings.
@@ -99,10 +99,10 @@ export async function continueConversation(
     - If the date is not specified, take by default system time. 
     - You can schedule meetings, delete meetings, move meetings, modify meeting attendees, 
     modify the duration of meetings, modify the topics to be discussed during meetings.
-    - Use \`addMeetingTool\` to save meetings. If the user asks to schedule several meetings at once, or complete another impossible task, respond that you can't do it right now, but that you are working on implementing it.
+    - Use \`addMeetingTool\` to save meetings. If the user asks to schedule several meetings at once, or complete another impossible task, respond that you can't do it right now, but that you are working on implementing it, and do not continue with that task.
     - Use \`listMeetingsTool\` to list meetings. 
     `,
-  
+
     text: ({ content, done, delta }) => {
       textStream.update(content);
       if (done) {
@@ -137,55 +137,51 @@ export async function continueConversation(
         }),
 
         generate: async function* ({ dataMeeting }) {
+          yield <LoadingComponent />;
+          let onFinish: boolean = false;
           const availability: OverLap[] = await checkAvailability(dataMeeting);
           const toolCallId = nanoid();
 
-          if (availability.length === 1 && availability[0].result) {
-            const temp = availability[0].overLap;
+          let array: any[] = [];
 
-            const response = await fetch(
-              `${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`,
-              {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(temp),
-              }
-            );
-
-            //yield <LoadingComponent />;
-
-            history.done({
-              ...history.get(),
-              content: [
-                ...history.get().content,
-                {
-                  id: nanoid(),
-                  role: "assistant",
-                  content: [
-                    {
-                      type: "tool-call",
-                      toolName: "addMeetingTool",
-                      toolCallId,
-                      args: { dataMeeting },
-                    },
-                  ],
-                },
-                {
-                  id: nanoid(),
-                  role: "tool",
-                  content: [
-                    {
-                      type: "tool-result",
-                      toolName: "addMeetingTool",
-                      toolCallId,
-                      result: response.ok,
-                    },
-                  ],
-                },
-              ],
-            });
+          for (let i = 0; i < availability.length; i++) {
+            let temp = availability[i].overLap[0];
+            array.push(temp);
           }
-          return <TaskList tasks={availability[0].overLap} />;
+
+          onFinish = true;
+          history.done({
+            ...history.get(),
+            content: [
+              ...history.get().content,
+              {
+                id: nanoid(),
+                role: "assistant",
+                content: [
+                  {
+                    type: "tool-call",
+                    toolName: "addMeetingTool",
+                    toolCallId,
+                    args: { dataMeeting },
+                  },
+                ],
+              },
+              {
+                id: nanoid(),
+                role: "tool",
+                content: [
+                  {
+                    type: "tool-result",
+                    toolName: "addMeetingTool",
+                    toolCallId,
+                    result: onFinish === true,
+                  },
+                ],
+              },
+            ],
+          });
+
+          return <TaskList tasks={array} />;
         },
       },
 
@@ -203,10 +199,14 @@ export async function continueConversation(
           }),
         }),
 
-        generate: async function ({ listMeeting }) {
+        generate: async function* ({ listMeeting }) {
+          yield <LoadingComponent />;
           const toolCallId = nanoid();
-          const meetings = await listMeetings(listMeeting)
-          const meetingData = meetings.map(meeting => meeting.dataValues);
+          let onFinish: boolean = false;
+          const meetings = await listMeetings(listMeeting);
+          const meetingData = meetings.map((meeting) => meeting.dataValues);
+          onFinish = true;
+
           history.done({
             ...history.get(),
             content: [
@@ -231,7 +231,7 @@ export async function continueConversation(
                     type: "tool-result",
                     toolName: "listMeetingsTool",
                     toolCallId,
-                    result: meetingData,
+                    result: onFinish === true,
                   },
                 ],
               },
@@ -239,7 +239,6 @@ export async function continueConversation(
           });
 
           return <TaskList tasks={meetingData} />;
-          return <div></div>;
         },
       },
     },
