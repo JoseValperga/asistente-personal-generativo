@@ -81,7 +81,7 @@ export const checkAvailability = async (
     }
     return array;
   } catch (error) {
-
+console.log("ERROR", error)
     throw new Error("Error en verificacion de disponibilidad");
   }
 };

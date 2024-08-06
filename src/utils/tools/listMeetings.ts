@@ -4,7 +4,7 @@ import { connectDB, Meeting } from "@/lib/db";
 
 export const listMeetings = async (data: DataMeeting) => {
   const { who, when, whenEnd, since, until, about } = data;
-  //console.log("DATA en listMeetings", data);
+
   await connectDB();
   const conditions: any = {};
 
@@ -56,7 +56,6 @@ export const listMeetings = async (data: DataMeeting) => {
       where: conditions,
     });
 
-    //console.log("Metings----------------------------->", meetings);
     return meetings;
   } catch (error) {
     console.error("Error fetching meetings:", error);

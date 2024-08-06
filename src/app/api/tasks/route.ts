@@ -7,8 +7,6 @@ export async function POST(request: Request): Promise<Response> {
   await connectDB();
   const data: DataMeeting = await request.json();
 
-  console.log ("ESTOY EN SAVE", data)
-
   try {
     const newData = await saveMeeting(data);
     const response = new Response(JSON.stringify(newData), {
@@ -19,7 +17,6 @@ export async function POST(request: Request): Promise<Response> {
     });
     return response;
   } catch (error) {
-    console.log("ERROR",error)
     return new Response("Error al guardar la reunión", {
       status: 500,
       headers: {

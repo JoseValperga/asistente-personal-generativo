@@ -3,6 +3,7 @@ import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import MeetingModel from "./models/meeting";
 import { EnvVariables } from "@/utils/interfaces";
+
 dotenv.config();
 
 const getEnvVariables = (): EnvVariables => {
@@ -31,7 +32,6 @@ const getEnvVariables = (): EnvVariables => {
 const env = getEnvVariables();
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL } = env;
-//const temp2: string = `${NEXT_PUBLIC_BASE_URL}`
 
 let temp: string;
 
@@ -40,10 +40,17 @@ if (NEXT_PUBLIC_BASE_URL === "http://localhost:3000") {
 } else {
   temp = NEXT_PUBLIC_BASE_URL;
 }
+
 const sequelize = new Sequelize(temp, {
   logging: false,
   native: false,
   dialectModule: pg,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false,
+    },
+  },
 });
 
 MeetingModel(sequelize);
@@ -53,8 +60,8 @@ const { Meeting } = sequelize.models;
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log("Database connected successfully.");
     await sequelize.sync({ alter: true });
+    console.log("Connection has been established successfully.");
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }

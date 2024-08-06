@@ -33,7 +33,6 @@ export default function Home() {
     ]);
 
     setInput("");
-    console.log("CONVERSATION-------------->", conversation);
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
