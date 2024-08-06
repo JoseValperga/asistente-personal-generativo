@@ -6,9 +6,9 @@ import { EnvVariables } from "@/utils/interfaces";
 dotenv.config();
 
 const getEnvVariables = (): EnvVariables => {
-  const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = process.env;
+  const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL } = process.env;
 
-  if (!DB_USER || !DB_PASSWORD || !DB_HOST || !DB_NAME) {
+  if (!DB_USER || !DB_PASSWORD || !DB_HOST || !DB_NAME || !NEXT_PUBLIC_BASE_URL) {
     throw new Error("Missing required environment variables");
   }
 
@@ -17,19 +17,30 @@ const getEnvVariables = (): EnvVariables => {
     DB_PASSWORD,
     DB_HOST,
     DB_NAME,
+    NEXT_PUBLIC_BASE_URL
   };
 };
 
 const env = getEnvVariables();
 
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME } = env;
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL } = env;
+const temp2: string = `${NEXT_PUBLIC_BASE_URL}`
 
 const temp: string = `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`;
 
-const sequelize = new Sequelize(temp, {
+const sequelize = new Sequelize(NEXT_PUBLIC_BASE_URL, {
   logging: false,
   native: false,
   dialectModule: pg,
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000,
+  },
+  retry: {
+    max: 3,
+  },
 });
 
 MeetingModel(sequelize);

@@ -1,6 +1,11 @@
+
 import { DataMeeting } from "../interfaces";
 import { Meeting, connectDB } from "@/lib/db";
 import { Op } from "sequelize";
+//import fetch from 'node-fetch';
+import dotenv from "dotenv";
+dotenv.config();
+const {NEXT_PUBLIC_BASE_URL} = process.env
 
 export interface OverLap {
   overLap: DataMeeting[];
@@ -22,7 +27,7 @@ export const blankData: DataMeeting[] = [
 export const checkAvailability = async (
   dataMeeting: DataMeeting
 ): Promise<OverLap[]> => {
-  //console.log("Estoy en checkAvailability");
+  'use server'
 
   const array: OverLap[] = [];
 
@@ -42,9 +47,9 @@ export const checkAvailability = async (
 
     if (test1.result && test2.result && test3.result) {
       array.push(test1);
-      const temp = array[0].overLap;
+      const temp = array[0].overLap[0];
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/tasks`,
+        `${NEXT_PUBLIC_BASE_URL}/api/tasks`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -76,6 +81,7 @@ export const checkAvailability = async (
     }
     return array;
   } catch (error) {
+
     throw new Error("Error en verificacion de disponibilidad");
   }
 };
@@ -137,7 +143,6 @@ export const verifyMeetingAvailability = async (
       };
     }
   } catch (error) {
-    //console.log("Error verifying meeting availability:", error);
     throw new Error("Error verifying meeting availability:");
   }
 };
@@ -186,7 +191,6 @@ export const verifyUniqueStartTime = async (
       };
     }
   } catch (error) {
-    //console.log("Error verifying meeting availability:", error);
     throw new Error("Error verifying meeting availability:");
   }
 };

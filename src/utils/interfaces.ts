@@ -25,4 +25,5 @@ export interface EnvVariables {
   DB_PASSWORD: string;
   DB_HOST: string;
   DB_NAME: string;
+  NEXT_PUBLIC_BASE_URL: string;
 }

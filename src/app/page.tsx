@@ -49,7 +49,30 @@ export default function Home() {
         ASISTENTE PERSONAL
       </div>
       <div className="grid grid-cols-12 gap-4 flex-grow p-4 font-serif h-full">
-        <div className="col-span-3">
+        <div className="col-span-3 space-y-4">
+          <p className="font-semibold">!Bienvenidos al Asistente Personal!</p>
+
+          <p>
+            - Puedes agendar reuniones con alguna frase, como por ejemplo,
+            "Reunión con pedro el próximo martes a las 17 para hablar de
+            negocios"
+          </p>
+          <p>
+            {" "}
+            O pudes decirle "Agenda una reunión de 15 minutos con Luis para el
+            primer lunes de Octubre a las 9 de la mañana para que le de
+            instrucciones"
+          </p>
+          <p>
+            También puedes listar reuniones diciendo, por ejemplo, "Muéstrame
+            las reuniones para hoy", o también, "Lista todas las reuniones con
+            Luis"
+          </p>
+          <p>
+            Toavia no es posible decirle "Programa reuniones de 40 minutos con
+            Pedro todos los lunes de Octubre a las 9 de la mañana para darle
+            instrucciones", pero estamos trabajando en eso"
+          </p>
           {/*<p className="text-center font-medium mt-4">Resultados</p>*/}
         </div>
 
@@ -112,9 +135,12 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="col-span-3">
-          {/*<p className="text-center font-medium mt-4">Herramientas</p>*/}
-        </div>
+        <div className="col-span-3 font-bold text-center flex flex-col justify-center space-y-2">
+  <p>Asistente personal versión 1.0</p>
+  <p>by JoseferDev</p>
+  {/*<p className="text-center font-medium mt-4">Herramientas</p>*/}
+</div>
+
       </div>
     </div>
   );
