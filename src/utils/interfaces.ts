@@ -26,4 +26,5 @@ export interface EnvVariables {
   DB_HOST: string;
   DB_NAME: string;
   NEXT_PUBLIC_BASE_URL: string;
+  BASE_URL:string;
 }

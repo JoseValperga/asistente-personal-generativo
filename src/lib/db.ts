@@ -7,7 +7,7 @@ import { EnvVariables } from "@/utils/interfaces";
 dotenv.config();
 
 const getEnvVariables = (): EnvVariables => {
-  const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL } =
+  const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL, BASE_URL } =
     process.env;
 
   if (
@@ -15,7 +15,8 @@ const getEnvVariables = (): EnvVariables => {
     !DB_PASSWORD ||
     !DB_HOST ||
     !DB_NAME ||
-    !NEXT_PUBLIC_BASE_URL
+    !NEXT_PUBLIC_BASE_URL ||
+    !BASE_URL
   ) {
     throw new Error("Missing required environment variables");
   }
@@ -26,6 +27,7 @@ const getEnvVariables = (): EnvVariables => {
     DB_HOST,
     DB_NAME,
     NEXT_PUBLIC_BASE_URL,
+    BASE_URL
   };
 };
 

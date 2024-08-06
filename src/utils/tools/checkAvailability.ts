@@ -5,7 +5,7 @@ import { Op } from "sequelize";
 //import fetch from 'node-fetch';
 import dotenv from "dotenv";
 dotenv.config();
-const {NEXT_PUBLIC_BASE_URL} = process.env
+const {BASE_URL} = process.env
 
 export interface OverLap {
   overLap: DataMeeting[];
@@ -49,7 +49,7 @@ export const checkAvailability = async (
       array.push(test1);
       const temp = array[0].overLap[0];
       const response = await fetch(
-        `https://asistente-personal.onrender.com/api/tasks`,
+        `${BASE_URL}/api/tasks`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
