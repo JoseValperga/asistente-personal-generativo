@@ -49,7 +49,7 @@ export const checkAvailability = async (
       array.push(test1);
       const temp = array[0].overLap[0];
       const response = await fetch(
-        `${NEXT_PUBLIC_BASE_URL}/api/tasks`,
+        `https://asistente-personal.onrender.com/api/tasks`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
