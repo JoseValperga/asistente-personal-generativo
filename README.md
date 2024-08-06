@@ -1,4 +1,4 @@
-##Bienvenidos al Asistente Personal con IA basado de Chat GPT
+## Bienvenidos al Asistente Personal con IA basado de Chat GPT
 
 El deploy fue hecho en dos lugares:
 https://asistente-personal.onrender.com/ y https://asistente-personal-generativo.vercel.app/
@@ -10,7 +10,7 @@ Crea una base de datos postgre en tu compu llamada "meetings".
 Las tablas se crean de forma automática. 
 Debes tener una OPENAI_API_KEY porque utiliza el modelo GPT-4o.
 
-##Importante
+## Importante
 Para que funcione en forma local, crea un .env.local,
 pero tener en cuenta que actualmente funciona con 
 una base de datos postgreSQL deployada en Render
