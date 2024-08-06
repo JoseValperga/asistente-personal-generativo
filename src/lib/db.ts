@@ -28,7 +28,7 @@ const temp2: string = `${NEXT_PUBLIC_BASE_URL}`
 
 const temp: string = `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`;
 
-const sequelize = new Sequelize(NEXT_PUBLIC_BASE_URL, {
+const sequelize = new Sequelize(temp, {
   logging: false,
   native: false,
   dialectModule: pg,
