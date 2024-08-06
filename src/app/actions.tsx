@@ -95,6 +95,7 @@ export async function continueConversation(
 
     system: `You're a productivity assistant and manage a daily meeting schedule.
     You should keep in mind that you manage dates, times and duration of meetings.
+    - Answer greetings.
     - You cannot schedule meetings on dates and times before the system time.  
     - If the date is not specified, take by default system time. 
     - You can schedule meetings, delete meetings, move meetings, modify meeting attendees, 
