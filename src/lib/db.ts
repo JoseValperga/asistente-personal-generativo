@@ -6,9 +6,16 @@ import { EnvVariables } from "@/utils/interfaces";
 dotenv.config();
 
 const getEnvVariables = (): EnvVariables => {
-  const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL } = process.env;
+  const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL } =
+    process.env;
 
-  if (!DB_USER || !DB_PASSWORD || !DB_HOST || !DB_NAME || !NEXT_PUBLIC_BASE_URL) {
+  if (
+    !DB_USER ||
+    !DB_PASSWORD ||
+    !DB_HOST ||
+    !DB_NAME ||
+    !NEXT_PUBLIC_BASE_URL
+  ) {
     throw new Error("Missing required environment variables");
   }
 
@@ -17,30 +24,26 @@ const getEnvVariables = (): EnvVariables => {
     DB_PASSWORD,
     DB_HOST,
     DB_NAME,
-    NEXT_PUBLIC_BASE_URL
+    NEXT_PUBLIC_BASE_URL,
   };
 };
 
 const env = getEnvVariables();
 
 const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL } = env;
-const temp2: string = `${NEXT_PUBLIC_BASE_URL}`
+//const temp2: string = `${NEXT_PUBLIC_BASE_URL}`
 
-const temp: string = `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`;
+let temp: string;
 
+if (NEXT_PUBLIC_BASE_URL === "http://localhost:3000") {
+  temp = `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`;
+} else {
+  temp = NEXT_PUBLIC_BASE_URL;
+}
 const sequelize = new Sequelize(temp, {
   logging: false,
   native: false,
   dialectModule: pg,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000,
-  },
-  retry: {
-    max: 3,
-  },
 });
 
 MeetingModel(sequelize);

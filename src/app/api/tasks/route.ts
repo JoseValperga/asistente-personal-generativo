@@ -5,7 +5,9 @@ import { DataMeeting } from "@/utils/interfaces";
 export async function POST(request: Request): Promise<Response> {
   "use server";
   await connectDB();
-  const data: DataMeeting[] = await request.json();
+  const data: DataMeeting = await request.json();
+
+  console.log ("ESTOY EN SAVE", data)
 
   try {
     const newData = await saveMeeting(data);
@@ -17,6 +19,7 @@ export async function POST(request: Request): Promise<Response> {
     });
     return response;
   } catch (error) {
+    console.log("ERROR",error)
     return new Response("Error al guardar la reunión", {
       status: 500,
       headers: {

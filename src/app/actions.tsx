@@ -146,6 +146,7 @@ export async function continueConversation(
 
           for (let i = 0; i < availability.length; i++) {
             let temp = availability[i].overLap[0];
+            
             array.push(temp);
           }
 
