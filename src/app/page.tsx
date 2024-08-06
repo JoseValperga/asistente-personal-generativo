@@ -54,24 +54,24 @@ export default function Home() {
 
           <p>
             - Puedes agendar reuniones con alguna frase, como por ejemplo,
-            "Reunión con pedro el próximo martes a las 17 para hablar de
-            negocios"
+            Reunión con pedro el próximo martes a las 17 para hablar de
+            negocios
           </p>
           <p>
             {" "}
-            O pudes decirle "Agenda una reunión de 15 minutos con Luis para el
+            O pudes decirle Agenda una reunión de 15 minutos con Luis para el
             primer lunes de Octubre a las 9 de la mañana para que le de
-            instrucciones"
+            instrucciones
           </p>
           <p>
-            También puedes listar reuniones diciendo, por ejemplo, "Muéstrame
-            las reuniones para hoy", o también, "Lista todas las reuniones con
-            Luis"
+            También puedes listar reuniones diciendo, por ejemplo, Muéstrame
+            las reuniones para hoy, o también, Lista todas las reuniones con
+            Luis
           </p>
           <p>
-            Toavia no es posible decirle "Programa reuniones de 40 minutos con
+            Toavia no es posible decirle Programa reuniones de 40 minutos con
             Pedro todos los lunes de Octubre a las 9 de la mañana para darle
-            instrucciones", pero estamos trabajando en eso"
+            instrucciones, pero estamos trabajando en eso
           </p>
           {/*<p className="text-center font-medium mt-4">Resultados</p>*/}
         </div>
