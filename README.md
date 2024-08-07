@@ -12,9 +12,7 @@ Debes tener una OPENAI_API_KEY porque utiliza el modelo GPT-4o.
 
 ## Importante
 Para que funcione en forma local, crea un .env.local,
-pero tener en cuenta que actualmente funciona con 
-una base de datos postgreSQL deployada en Render
-por lo que no hace falta que la vayas a crear.
+
 
 El .env.local debe ser:
 OPENAI_API_KEY = tu clave
