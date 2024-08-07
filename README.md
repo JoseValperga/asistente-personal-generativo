@@ -22,5 +22,6 @@ DB_HOST=localhost:5432
 DB_NAME=meetings
 LANGUAGE=spanish
 NEXT_PUBLIC_BASE_URL=http://localhost:3000
+BASE_URL=http://localhost:3000
 
 
