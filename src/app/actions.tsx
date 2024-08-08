@@ -58,13 +58,13 @@ const LoadingComponent = () => (
   <div className="animate-pulse p-4">working, please wait...</div>
 );
 
-let textStream = createStreamableValue("");
 
 export async function continueConversation(
   input: string
 ): Promise<ClientMessage> {
   "use server";
-
+  
+  let textStream = createStreamableValue("");
   const history = getMutableAIState<typeof AI>();
 
   history.update({

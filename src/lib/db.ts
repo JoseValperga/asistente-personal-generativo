@@ -39,33 +39,39 @@ const getEnvVariables = (): EnvVariables => {
 
 const env = getEnvVariables();
 
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL } = env;
+const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, NEXT_PUBLIC_BASE_URL, BASE_URL } = env;
 
 let temp: string;
+let sequelizeConfiguration: object = {};
 
 if (NEXT_PUBLIC_BASE_URL === "http://localhost:3000") {
   temp = `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/${DB_NAME}`;
+  sequelizeConfiguration = {
+    logging: false,
+    native: false,
+    dialectModule: pg,
+  };
 } else {
   temp = NEXT_PUBLIC_BASE_URL;
-}
-
-const sequelize = new Sequelize(temp, {
-  logging: false,
-  native: false,
-  dialectModule: pg,
-  dialectOptions: {
-    ssl: {
-      require: true,
-      rejectUnauthorized: false,
+  sequelizeConfiguration = {
+    logging: false,
+    native: false,
+    dialectModule: pg,
+    dialectOptions: {
+      ssl: {
+        require: true,
+        rejectUnauthorized: false,
+      },
     },
-  },
-  pool: {
-    acquire: 3000, // Tiempo máximo en milisegundos que Sequelize intentará conectar antes de lanzar un error (30 segundos)
-  },
-  retry: {
-    max: 5, // Número máximo de reintentos en caso de error
-  },
-});
+    pool: {
+      acquire: 3000,
+    },
+    retry: {
+      max: 5,
+    },
+  };
+}
+const sequelize = new Sequelize(temp, sequelizeConfiguration);
 
 MeetingModel(sequelize);
 

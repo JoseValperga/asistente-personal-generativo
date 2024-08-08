@@ -1,11 +1,9 @@
-
 import { DataMeeting } from "../interfaces";
 import { Meeting, connectDB } from "@/lib/db";
 import { Op } from "sequelize";
 //import fetch from 'node-fetch';
 import dotenv from "dotenv";
 dotenv.config();
-const {BASE_URL} = process.env
 
 export interface OverLap {
   overLap: DataMeeting[];
@@ -27,7 +25,16 @@ export const blankData: DataMeeting[] = [
 export const checkAvailability = async (
   dataMeeting: DataMeeting
 ): Promise<OverLap[]> => {
-  'use server'
+  "use server";
+
+  const { BASE_URL, NEXT_PUBLIC_BASE_URL } = process.env;
+  let urlConnect: string = "";
+
+  if (NEXT_PUBLIC_BASE_URL === "http://localhost:3000") {
+    urlConnect = `${NEXT_PUBLIC_BASE_URL}/api/tasks`;
+  } else {
+    urlConnect = `${BASE_URL}/api/tasks`;
+  }
 
   const array: OverLap[] = [];
 
@@ -48,14 +55,11 @@ export const checkAvailability = async (
     if (test1.result && test2.result && test3.result) {
       array.push(test1);
       const temp = array[0].overLap[0];
-      const response = await fetch(
-        `https://asistente-personal.onrender.com/api/tasks`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(temp),
-        }
-      );
+      const response = await fetch(urlConnect, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(temp),
+      });
       return array;
     }
 
@@ -81,7 +85,7 @@ export const checkAvailability = async (
     }
     return array;
   } catch (error) {
-console.log("ERROR", error)
+    console.log("ERROR", error);
     throw new Error("Error en verificacion de disponibilidad");
   }
 };

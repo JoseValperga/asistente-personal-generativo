@@ -13,13 +13,24 @@ export default function Home() {
   const { continueConversation } = useActions();
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const scrollToBottom = () => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messagesEndRef.current.scrollIntoView({
+        behavior: "auto",
+        block: "nearest",
+        inline: "nearest",
+      });
     }
+  };
+  
+  useEffect(() => {
+    scrollToBottom();
   }, [conversation]);
 
   const handleSendMessage = async () => {
+    if (!input.trim()) {
+      return;
+    }
     setConversation((currentConversation: ClientMessage[]) => [
       ...currentConversation,
       { id: generateId(), role: "user", display: input },
@@ -53,8 +64,7 @@ export default function Home() {
 
           <p>
             - Puedes agendar reuniones con alguna frase, como por ejemplo,
-            Reunión con pedro el próximo martes a las 17 para hablar de
-            negocios
+            Reunión con pedro el próximo martes a las 17 para hablar de negocios
           </p>
           <p>
             {" "}
@@ -63,9 +73,8 @@ export default function Home() {
             instrucciones
           </p>
           <p>
-            También puedes listar reuniones diciendo, por ejemplo, Muéstrame
-            las reuniones para hoy, o también, Lista todas las reuniones con
-            Luis
+            También puedes listar reuniones diciendo, por ejemplo, Muéstrame las
+            reuniones para hoy, o también, Lista todas las reuniones con Luis
           </p>
           <p>
             Toavia no es posible decirle Programa reuniones de 40 minutos con
@@ -135,11 +144,10 @@ export default function Home() {
         </div>
 
         <div className="col-span-3 font-bold text-center flex flex-col justify-center space-y-2">
-  <p>Asistente personal versión 1.0</p>
-  <p>by JoseferDev</p>
-  {/*<p className="text-center font-medium mt-4">Herramientas</p>*/}
-</div>
-
+          <p>Asistente personal versión 1.0</p>
+          <p>by JoseferDev</p>
+          {/*<p className="text-center font-medium mt-4">Herramientas</p>*/}
+        </div>
       </div>
     </div>
   );
