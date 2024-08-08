@@ -139,7 +139,6 @@ export async function continueConversation(
 
         generate: async function* ({ dataMeeting }) {
           yield <LoadingComponent />;
-          let onFinish: boolean = false;
           const toolCallId = nanoid();
           const availability: OverLap[] = await checkAvailability(dataMeeting);
 
@@ -150,8 +149,8 @@ export async function continueConversation(
 
             array.push(temp);
           }
-          sleep(500);
-          onFinish = true;
+
+          //sleep(500);
           history.done({
             ...history.get(),
             content: [
@@ -176,7 +175,7 @@ export async function continueConversation(
                     type: "tool-result",
                     toolName: "addMeetingTool",
                     toolCallId,
-                    result: onFinish === true,
+                    result: array,
                   },
                 ],
               },
@@ -204,11 +203,9 @@ export async function continueConversation(
         generate: async function* ({ listMeeting }) {
           yield <LoadingComponent />;
           const toolCallId = nanoid();
-          let onFinish: boolean = false;
           const meetings = await listMeetings(listMeeting);
           const meetingData = meetings.map((meeting) => meeting.dataValues);
-          onFinish = true;
-          sleep(500);
+          //sleep(500);
           history.done({
             ...history.get(),
             content: [
@@ -233,7 +230,7 @@ export async function continueConversation(
                     type: "tool-result",
                     toolName: "listMeetingsTool",
                     toolCallId,
-                    result: onFinish === true,
+                    result: meetingData,
                   },
                 ],
               },
