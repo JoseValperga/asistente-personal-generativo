@@ -26,8 +26,9 @@ import {
 import dotenv from "dotenv";
 import { checkAvailability, OverLap } from "@/utils/tools/checkAvailability";
 import TaskList from "@/components/TaskList";
-import { DataMeeting } from "../utils/interfaces";
+import { DataMeeting } from '../utils/interfaces';
 import { listMeetings } from "@/utils/tools/listMeetings";
+
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
 export type Message = CoreMessage & {
@@ -92,16 +93,16 @@ export async function continueConversation(
     //- Before scheduling a meeting, check if the time slot is available.
     //  - If the time slot is not available, respond with a message indicating the conflict but do not suggest an alternative time.
 
-    system: `You are a helpful assistant. You manage daily meeting schedules and also other activities of any kind, as long as they are morally correct.
-    - Answer greetings.
-    - If today's date and time are not specified, take the system date and time by default. 
-    - You can schedule meetings or activities, list meetings or activities, and locate meetings or activities.. 
-    - You can't schedule meetings or activities on dates and times before the system time.  
-    - You can't delete meetings or activities, move them, modify the attendees of them, modify their durations, or modify the topics that will be covered during meetings or activities that will take place.
-    - Use \`addMeetingTool\` to save meetings or activities. If the user asks to schedule several meetings or activities at once, or complete another impossible task, respond that you can't do it right now, but that you are working on implementing it, and do not continue with that task.
-    - Use \`listMeetingsTool\` to list meetings or actvities or to locate meetings or activities. 
+    system: `You are a helpful assistant. You manage daily meeting schedules and other activities, as long as they are morally correct.
+  - Respond to greetings.
+  - If today's date and time are not specified, use the system's current date and time by default.
+  - You can schedule meetings or activities, list meetings or activities, and locate meetings or activities.
+  - You cannot schedule meetings or activities on dates and times earlier than the system's current time.
+  - You cannot delete meetings or activities, move them, modify their attendees, change their durations, or alter the topics to be covered during meetings or activities.
+  - Use the \`addMeetingTool\` to save meetings or activities. If the user asks to schedule multiple meetings or activities at once, or to complete another impossible task, respond that you can't do it right now, but that you are working on implementing it, and do not proceed with that task.
+  - Use the \`listMeetingsTool\` to list meetings or activities, or to locate meetings or activities.
     `,
-    
+
     temperature: 0.5,
 
     text: ({ content, done, delta }) => {
@@ -213,6 +214,8 @@ export async function continueConversation(
             since: timeSchemaSince,
             until: timeSchemaSinceUntil,
             about: aboutSchema,
+            //howOrdered: listMeetingsOptionsSchema
+
           }),
         }),
 

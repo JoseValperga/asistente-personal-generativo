@@ -55,12 +55,12 @@ export default function Home() {
 
   return (
     <div className="flex flex-col h-screen w-full p-3">
-      <div className="text-center font-serif border border-black p-4 m-3 rounded-xl">
+      <div className="text-center font-serif border border-black p-4 m-3 rounded-xl font-semibold">
         ASISTENTE PERSONAL
       </div>
       <div className="grid grid-cols-12 gap-4 flex-grow p-4 font-serif h-full">
         <div className="col-span-3 space-y-4">
-          <p className="font-semibold">!Bienvenidos al Asistente Personal!</p>
+          <p className="font-semibold">¡Bienvenidos al Asistente Personal!</p>
 
           <p>
             - Puedes agendar reuniones con alguna frase, como por ejemplo,
@@ -68,16 +68,16 @@ export default function Home() {
           </p>
           <p>
             {" "}
-            O pudes decirle Agenda una reunión de 15 minutos con Luis para el
+            - O pudes decirle Agenda una reunión de 15 minutos con Luis para el
             primer lunes de Octubre a las 9 de la mañana para que le de
             instrucciones
           </p>
           <p>
-            También puedes listar reuniones diciendo, por ejemplo, Muéstrame las
+            - También puedes listar reuniones diciendo, por ejemplo, Muéstrame las
             reuniones para hoy, o también, Lista todas las reuniones con Luis
           </p>
           <p>
-            Toavia no es posible decirle Programa reuniones de 40 minutos con
+            - Todavia no es posible decirle Programa reuniones de 40 minutos con
             Pedro todos los lunes de Octubre a las 9 de la mañana para darle
             instrucciones, pero estamos trabajando en eso
           </p>
@@ -108,23 +108,7 @@ export default function Home() {
             )}
             <div ref={messagesEndRef} />
           </div>
-          {/*}
-          <div className="flex-grow overflow-y-auto bg-gray-200 p-4 rounded-lg mb-4 border border-black h-0">
-            {conversation.map((message: ClientMessage[]) => (
-              <div
-                key={message.id}
-                className={`mb-4 p-2 rounded-xl shadow ${
-                  message.role === "user" ? "bg-yellow-200" : "bg-orange-200"
-                } flex ${
-                  message.role === "user" ? "justify-start" : "justify-end"
-                }`}
-              >
-                <span className="font-semibold">{message.role}{': '}</span>{message.display}
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-*/}
+        
           <div className="bg-white p-4 rounded-lg shadow-md grid grid-cols-5 gap-3 border border-black">
             <input
               type="text"
@@ -146,7 +130,6 @@ export default function Home() {
         <div className="col-span-3 font-bold text-center flex flex-col justify-center space-y-2">
           <p>Asistente personal versión 1.0</p>
           <p>by JoseferDev</p>
-          {/*<p className="text-center font-medium mt-4">Herramientas</p>*/}
         </div>
       </div>
     </div>
