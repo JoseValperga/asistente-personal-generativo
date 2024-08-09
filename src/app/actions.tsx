@@ -92,26 +92,28 @@ export async function continueConversation(
     //- Before scheduling a meeting, check if the time slot is available.
     //  - If the time slot is not available, respond with a message indicating the conflict but do not suggest an alternative time.
 
-    system: `You are a productivity assistant and manage daily meeting schedules and also other activities of any kind, as long as they are morally correct.
-    You should keep in mind that you manage dates, times and duration of meetings.
+    system: `You are a helpful assistant. You manage daily meeting schedules and also other activities of any kind, as long as they are morally correct.
     - Answer greetings.
-    - You cannot schedule meetings on dates and times before the system time.  
-    - If the date is not specified, take by default system time. 
-    - You can schedule meetings, and list meetings. You can not, for now, delete meetings, move meetings, modify meeting attendees, modify the duration of meetings, modify the topics to be discussed during meetings.
-    - Use \`addMeetingTool\` to save meetings. If the user asks to schedule several meetings at once, or complete another impossible task, respond that you can't do it right now, but that you are working on implementing it, and do not continue with that task.
-    - Use \`listMeetingsTool\` to list meetings. 
+    - If today's date and time are not specified, take the system date and time by default. 
+    - You can schedule meetings or activities, list meetings or activities, and locate meetings or activities.. 
+    - You can't schedule meetings or activities on dates and times before the system time.  
+    - You can't delete meetings or activities, move them, modify the attendees of them, modify their durations, or modify the topics that will be covered during meetings or activities that will take place.
+    - Use \`addMeetingTool\` to save meetings or activities. If the user asks to schedule several meetings or activities at once, or complete another impossible task, respond that you can't do it right now, but that you are working on implementing it, and do not continue with that task.
+    - Use \`listMeetingsTool\` to list meetings or actvities or to locate meetings or activities. 
     `,
+    
+    temperature: 0.5,
 
     text: ({ content, done, delta }) => {
-      textStream.update(content);
-      console.log(
+      //textStream.update(content);
+      /*console.log(
         "-------------------UPDATE TEXTSTREAM------------------------------------------"
       );
       console.log("DONE en text", done);
       console.log("CONTENT in text", content);
       console.log("DELTA en test", delta);
       console.log("HISTORY EN TEST", history.get())
-      console.log();
+      console.log();*/
       if (done) {
         textStream.done();
         history.done({
@@ -122,21 +124,21 @@ export async function continueConversation(
           ],
         });
       } else {
-        textStream.update(delta);
+        textStream.update(delta); /*
         console.log(
           "***************UPDATE DELTA*********************************"
         );
         console.log("DONE en textStream", done);
         console.log("CONTENT in textStream", content);
         console.log("DELTA en testStream", delta);
-        console.log("HISTORY EN TESTSTREAM", history.get())
+        console.log("HISTORY EN TESTSTREAM", history.get())*/
       }
       return <div>{content}</div>;
     },
 
     tools: {
       addMeetingTool: {
-        description: "Schedule meetings.",
+        description: "Schedule meetings or activities",
 
         parameters: z.object({
           dataMeeting: z.object({
@@ -194,14 +196,14 @@ export async function continueConversation(
               },
             ],
           });
-          console.log("------------------EN ADDMEETINGS-----------------")
-          console.log("HISTORY GET EN TESTSTREAM", history.get())
+          console.log("------------------EN ADDMEETINGS-----------------");
+          console.log("HISTORY GET EN TESTSTREAM", history.get());
           return <TaskList tasks={array} />;
         },
       },
 
       listMeetingsTool: {
-        description: "List meetings",
+        description: "List meetings or to locate meetings",
 
         parameters: z.object({
           listMeeting: z.object({
@@ -250,9 +252,8 @@ export async function continueConversation(
               },
             ],
           });
-          console.log("------------------EN LIST-----------------")
-          console.log("HISTORY GET EN TESTSTREAM", history.get())
-          
+          //console.log("------------------EN LIST-----------------");
+          //console.log("HISTORY GET EN TESTSTREAM", history.get());
 
           return <TaskList tasks={meetingData} />;
         },

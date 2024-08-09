@@ -54,6 +54,7 @@ export const listMeetings = async (data: DataMeeting) => {
   try {
     const meetings = await Meeting.findAll({
       where: conditions,
+      order: [["when", "ASC"]],
     });
 
     return meetings;
