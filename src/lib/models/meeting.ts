@@ -12,11 +12,13 @@ interface MeetingAttributes {
 }
 
 // Define las propiedades opcionales para la creación del modelo
-interface MeetingCreationAttributes extends Optional<MeetingAttributes, 'id'> {}
+interface MeetingCreationAttributes extends Optional<MeetingAttributes, "id"> {}
 
 // Define la clase del modelo extendiendo de Model
-class MeetingInstance extends Model<MeetingAttributes, MeetingCreationAttributes> 
-  implements MeetingAttributes {
+class MeetingInstance
+  extends Model<MeetingAttributes, MeetingCreationAttributes>
+  implements MeetingAttributes
+{
   public id!: string;
   public who!: string[];
   public when!: string;
