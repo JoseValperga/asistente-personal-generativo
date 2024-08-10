@@ -106,7 +106,7 @@ export async function continueConversation(
     temperature: 0.5,
 
     text: ({ content, done, delta }) => {
-      //textStream.update(content);
+      textStream.update(content);
       /*console.log(
         "-------------------UPDATE TEXTSTREAM------------------------------------------"
       );
