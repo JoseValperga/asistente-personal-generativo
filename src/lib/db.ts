@@ -2,7 +2,7 @@ import pg from "pg";
 import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
 import MeetingModel from "./models/meeting";
-import MeetingCacheModel from "./models/meetings-cache";
+import MeetingCacheModel  from "./models/meetings_cache";
 import { EnvVariables } from "@/utils/interfaces";
 
 dotenv.config();
