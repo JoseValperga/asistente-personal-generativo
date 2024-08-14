@@ -26,8 +26,18 @@ import {
 import dotenv from "dotenv";
 import { checkAvailability, OverLap } from "@/utils/tools/checkAvailability";
 import TaskList from "@/components/TaskList";
-import { DataMeeting } from '../utils/interfaces';
+import { DataMeeting } from "../utils/interfaces";
 import { listMeetings } from "@/utils/tools/listMeetings";
+
+const { BASE_URL, NEXT_PUBLIC_BASE_URL } = process.env;
+
+let urlConnect: string | undefined;
+
+if (NEXT_PUBLIC_BASE_URL === "http://localhost:3000") {
+  urlConnect = NEXT_PUBLIC_BASE_URL;
+} else {
+  urlConnect = BASE_URL;
+}
 
 dotenv.config();
 const apiKey = process.env.OPENAI_API_KEY;
@@ -92,14 +102,15 @@ export async function continueConversation(
 
     //- Before scheduling a meeting, check if the time slot is available.
     //  - If the time slot is not available, respond with a message indicating the conflict but do not suggest an alternative time.
-
+    //If the user asks to schedule multiple meetings or activities at once, or to complete another impossible task, respond that you can't do it right now, but that you are working on implementing it, and do not proceed with that task.
     system: `You are a helpful assistant. You manage daily meeting schedules and other activities, as long as they are morally correct.
   - Respond to greetings.
-  - If today's date and time are not specified, use the system's current date and time by default.
+  - Use the system's current date and time.
   - You can schedule meetings or activities, list meetings or activities, and locate meetings or activities.
   - You cannot schedule meetings or activities on dates and times earlier than the system's current time.
   - You cannot delete meetings or activities, move them, modify their attendees, change their durations, or alter the topics to be covered during meetings or activities.
-  - Use the \`addMeetingTool\` to save meetings or activities. If the user asks to schedule multiple meetings or activities at once, or to complete another impossible task, respond that you can't do it right now, but that you are working on implementing it, and do not proceed with that task.
+  - If the user asks to complete another impossible task, respond that you can't do it right now.
+  - Use the \`addMeetingTool\` to save meetings or activities. If the user asks to schedule multiple meetings or activities at once, respond that you can't do it right now, but that you are working on implementing it, and do not proceed with that task.
   - Use the \`listMeetingsTool\` to list meetings or activities, or to locate meetings or activities.
     `,
 
@@ -107,14 +118,16 @@ export async function continueConversation(
 
     text: ({ content, done, delta }) => {
       textStream.update(content);
-      /*console.log(
+      
+      console.log(
         "-------------------UPDATE TEXTSTREAM------------------------------------------"
       );
       console.log("DONE en text", done);
       console.log("CONTENT in text", content);
       console.log("DELTA en test", delta);
       console.log("HISTORY EN TEST", history.get())
-      console.log();*/
+      console.log();
+      
       if (done) {
         textStream.done();
         history.done({
@@ -125,14 +138,16 @@ export async function continueConversation(
           ],
         });
       } else {
-        textStream.update(delta); /*
+        textStream.update(delta);
+
         console.log(
           "***************UPDATE DELTA*********************************"
         );
         console.log("DONE en textStream", done);
         console.log("CONTENT in textStream", content);
         console.log("DELTA en testStream", delta);
-        console.log("HISTORY EN TESTSTREAM", history.get())*/
+        console.log("HISTORY EN TESTSTREAM", history.get())
+
       }
       return <div>{content}</div>;
     },
@@ -156,17 +171,77 @@ export async function continueConversation(
         generate: async function* ({ dataMeeting }) {
           yield <LoadingComponent />;
           const toolCallId = nanoid();
+
+          const key = JSON.stringify(dataMeeting);
+          /*console.log(
+            "dataMeeting,key en ACTIONS GET---------------------->",
+            dataMeeting,
+            key
+          );
+          
+          const cacheResponse = await fetch(
+            `${urlConnect}/api/cache?dataMeeting=${encodeURIComponent(
+              JSON.stringify(dataMeeting)
+            )}`,
+            {
+              method: "GET",
+            }
+          );
+
+          if (cacheResponse.ok) {
+            const cachedResult = await cacheResponse.json();
+
+            history.update({
+              ...history.get(),
+              content: [
+                ...history.get().content,
+                {
+                  id: nanoid(),
+                  role: "assistant",
+                  content: [
+                    {
+                      type: "tool-call",
+                      toolName: "addMeetingTool",
+                      toolCallId,
+                      args: { dataMeeting },
+                    },
+                  ],
+                },
+
+                {
+                  id: nanoid(),
+                  role: "tool",
+                  content: [
+                    {
+                      type: "tool-result",
+                      toolName: "addMeetingTool",
+                      toolCallId,
+                      result: cachedResult,
+                    },
+                  ],
+                },
+              ],
+            });
+
+            return <TaskList tasks={cachedResult} />;
+          }
+          */
           const availability: OverLap[] = await checkAvailability(dataMeeting);
-
           let array: any[] = [];
-
           for (let i = 0; i < availability.length; i++) {
             let temp = availability[i].overLap[0];
-
             array.push(temp);
           }
-
-          //sleep(500);
+          /*
+          console.log("Array en POST actions------------------->", array);
+          await fetch(`${urlConnect}/api/cache`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(array),
+          });
+          */
           history.done({
             ...history.get(),
             content: [
@@ -197,6 +272,7 @@ export async function continueConversation(
               },
             ],
           });
+
           console.log("------------------EN ADDMEETINGS-----------------");
           console.log("HISTORY GET EN TESTSTREAM", history.get());
           return <TaskList tasks={array} />;
@@ -204,7 +280,7 @@ export async function continueConversation(
       },
 
       listMeetingsTool: {
-        description: "List meetings or to locate meetings",
+        description: "List meetings or to locate meetings. If the answer is empty, let us know that you don't have content for the year you're trying to list.",
 
         parameters: z.object({
           listMeeting: z.object({
@@ -215,7 +291,6 @@ export async function continueConversation(
             until: timeSchemaSinceUntil,
             about: aboutSchema,
             //howOrdered: listMeetingsOptionsSchema
-
           }),
         }),
 

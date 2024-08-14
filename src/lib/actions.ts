@@ -7,6 +7,7 @@ export const saveMeeting = async (data: DataMeeting) => {
   const { who, when, since, until, about, duration } = data;
 
   try {
+    await connectDB()
     const newMeet = await Meeting.create({
       who,
       when,

@@ -4,6 +4,8 @@ interface MeetingCacheAttributes {
   id: string;
   key: string;
   result: object;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 class MeetingCacheInstance
@@ -13,6 +15,8 @@ class MeetingCacheInstance
   public id!: string;
   public key!: string;
   public result!: object;
+  public created_at?: Date;
+  public updated_at?: Date;
 }
 
 const MeetingCacheModel = (sequelize: Sequelize) => {
@@ -32,10 +36,19 @@ const MeetingCacheModel = (sequelize: Sequelize) => {
         type: DataTypes.JSONB,
         allowNull: false,
       },
+      created_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
+      updated_at: {
+        type: DataTypes.DATE,
+        defaultValue: DataTypes.NOW,
+      },
     },
+
     {
       sequelize,
-      modelName: "MeetingCacheModel",
+      modelName: "MeetingCache",
       timestamps: true,
     }
   );
